@@ -1,3 +1,31 @@
+## CarND Capstone Project
+
+Scheduling issues prevented me from completing this project in the initial term.  I was put in another cohort much later in another term, and thus was unable to find a group with which to collaborate.  Therefore, I am submitting this project individually.
+
+### Model Architecture
+The Capstone project relies on the ROS package to operate a vehicle around a simulated, and later, an actual track with a live vehicle.
+The ROS software package sends messages from various nodes to other parts of the system in order to navigate efficiently around the track.  The system also relies on a deep learning model to recognize traffic lights, and thus follow traffic rules at the same time.
+
+#### ROS
+ROS consists of several packages that communicate with each other, but we are mostly concerned with the dbw_node, waypoint_updater, twist_controller, tl_detector and tl_classifier nodes.  Much of the code comes from the udacity classroom videos.
+
+The dbw_node and twist_controller are where most of the work takes place.  The twist_controller consists of a yaw_controller with params to set the throttle, steering and brake of the vehicle.  The dbw_node uses the yaw_controller, pid controller, and a low-pass filter to operate the vehicle.  It does this by steering through a list of waypoints provided by the waypoint_updater.
+
+The waypoint_updater provides the waypoints that dbw_node follows, and also listens for traffic light messages from the tl_detector node. If a red light is detected, waypoint velocities are reduced until the vehicle comes to a stop at a red light.
+
+tl_detector and tl_classifier perform the traffic light detection work.  tl_classifier uses a deep learning model to classify traffic lights, and tl_detector publishes the state and light waypoint to the /traffic_waypoint topic.
+
+#### Traffic Light detection
+I followed much of Alex Lechner's excellent tutorial on traffic light classification, and used the Inception Single Shot Multibox Detector model as he did.  I used an AWS instance to train on the data for several days, and was able to achieve reasonable, but not great, traffic light state recognition.  Given time, this is an area of the project that I would improve.  Red and green light detection were acceptable, but the model failed to recognize yellow lights.
+
+## Installation
+
+
+
+
+
+
+
 This is the project repo for the final project of the Udacity Self-Driving Car Nanodegree: Programming a Real Self-Driving Car. For more information about the project, see the project introduction [here](https://classroom.udacity.com/nanodegrees/nd013/parts/6047fe34-d93c-4f50-8336-b70ef10cb4b2/modules/e1a23b06-329a-4684-a717-ad476f0d8dff/lessons/462c933d-9f24-42d3-8bdc-a08a5fc866e4/concepts/5ab4b122-83e6-436d-850f-9f4d26627fd9).
 
 Please use **one** of the two installation options, either native **or** docker installation.
